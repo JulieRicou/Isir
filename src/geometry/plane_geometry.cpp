@@ -14,7 +14,7 @@ namespace RT_ISICG
 		{ // Attention à la comparaison avec 0
 			Vec3f po = _point - p_ray.getOrigin();
 			p_t1	 = dot( po, _normal ) / den;
-			return p_t1;
+			return true;
 		}
 		// Sinon, pas d’intersection
 		return false;

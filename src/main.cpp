@@ -19,13 +19,14 @@ namespace RT_ISICG
 		// Create a perspective camera.
 		//PerspectiveCamera camera( float( imgWidth ) / imgHeight );
 		int	cameraParameters = 1;
-		PerspectiveCamera camera( Vec3f( 0, 0, -2.f ), Vec3f( 0, 0, 79.f ), Vec3f( 0, 1.f, 0 ), 60.f, float( imgWidth)  /  imgHeight );
+		PerspectiveCamera camera( Vec3f( 0, 2.f, -6.f ), Vec3f( 0, 0, 79.f ), Vec3f( 0, 1.f, 0 ), 60.f, float( imgWidth)  /  imgHeight );
 
 		// Create and setup the renderer.
 		Renderer renderer;
 		renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING );
 		renderer.setBackgroundColor( GREY );
-		renderer.setNbPixelSamples( 1 );
+		renderer.setNbPixelSamples( 32 );
+		renderer.setLightSamples( 32 );
 
 		// Launch rendering.
 		std::cout << "Rendering..." << std::endl;

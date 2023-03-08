@@ -21,10 +21,32 @@ namespace RT_ISICG
 
 		for ( BaseLight * light : p_scene.getLights() ) 
 		{
-			LightSample sample = light->sample( hitRecord._point );
-			float		cosT   = glm::max( dot( sample._direction, hitRecord._normal ), 0.f );
-			//Li += hitRecord._object->getMaterial()->shade( p_ray, hitRecord, sample ) * sample._radiance * cosT;
-			Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * sample._radiance; //			 
+			if (!light->getIsSurface()) {
+				for ( size_t i = 0; i < _nbLightSamples; i++ )
+				{
+					LightSample lSample	  = light->sample( hitRecord._point );
+					Ray			shadowRay = Ray( hitRecord._point, lSample._direction );
+					shadowRay.offset( hitRecord._normal );
+					if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
+					{
+						float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
+						Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
+					}
+				}
+				Li /= _nbLightSamples;
+			}
+			else
+			{
+				LightSample lSample	  = light->sample( hitRecord._point );
+				Ray			shadowRay = Ray( hitRecord._point, lSample._direction );
+				shadowRay.offset( hitRecord._normal );
+				if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
+				{
+					float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
+					Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
+				}	
+			}
+				 
 		}
 
 		return Li;

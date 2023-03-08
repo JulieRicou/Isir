@@ -25,9 +25,11 @@ namespace RT_ISICG
 
 		const Vec3f & getBackgroundColor() const { return _backgroundColor; }
 		void		  setBackgroundColor( const Vec3f & p_color ) { _backgroundColor = p_color; }
+		void		  setLightSamples( const float p_nbLightSamples ) { _nbLightSamples = p_nbLightSamples; }
 
 	  protected:
 		Vec3f _backgroundColor = BLACK;
+		float _nbLightSamples  = 1;
 	};
 
 } // namespace RT_ISICG

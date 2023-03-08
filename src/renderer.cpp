@@ -46,7 +46,7 @@ namespace RT_ISICG
 
 		progressBar.start( height, 50 );
 		chrono.start();
-
+		#pragma omp parallel for
 		for ( int j = 0; j < height; j++ )
 		{
 			for ( int i = 0; i < width; i++ )
@@ -61,7 +61,7 @@ namespace RT_ISICG
 					value += _integrator->Li( p_scene, ray, p_t1, p_t2 );
 				}
 				p_texture.setPixel(
-					i, j, value / (float)_nbPixelSamples ); 
+					i, j, glm::clamp( value / (float)_nbPixelSamples, 0.f, 1.f) ); 
 			}
 			progressBar.next();
 		}

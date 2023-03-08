@@ -22,6 +22,7 @@ namespace RT_ISICG
 		inline void offset( const Vec3f p_normal )
 		{
 			/// TODO
+			_origin += p_normal * 0.001f;
 		}
 
 	  private:
