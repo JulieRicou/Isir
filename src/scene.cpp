@@ -37,19 +37,21 @@ namespace RT_ISICG
 			// ================================================================
 			// Add materials .
 			// ================================================================
-			_addMaterial( new ColorMaterial( " RedColor ", RED ) );
-			_addMaterial( new ColorMaterial( " GreenColor ", GREEN ) );
-			_addMaterial( new ColorMaterial( " BlueColor ", BLUE ) );
-			_addMaterial( new ColorMaterial( " GreyColor ", GREY ) );
-			_addMaterial( new ColorMaterial( " MagentaColor ", MAGENTA ) );
-			_addMaterial( new ColorMaterial( " YellowColor ", YELLOW ) );
-			_addMaterial( new ColorMaterial( " CyanColor ", CYAN ) );
+			_addMaterial( new ColorMaterial( "RedColor", RED ) );
+			_addMaterial( new ColorMaterial( "GreenColor", GREEN ) );
+			_addMaterial( new ColorMaterial( "BlueColor", BLUE ) );
+			_addMaterial( new ColorMaterial( "GreyColor", GREY ) );
+			_addMaterial( new ColorMaterial( "MagentaColor", MAGENTA ) );
+			_addMaterial( new ColorMaterial( "YellowColor", YELLOW ) );
+			_addMaterial( new ColorMaterial( "CyanColor", CYAN ) );
 			// ================================================================
 			// Add objects .
 			// ================================================================
 			// OBJ.
-			loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj" );
-			_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
+			//loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj" );
+			//_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
+			loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj" );
+			_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
 			// Pseudo Cornell box made with infinite planes .
 			_addObject( new Plane( "PlaneGround", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
 			_attachMaterialToObject( "GreyColor", "PlaneGround" );
@@ -79,7 +81,7 @@ namespace RT_ISICG
 				// Link objects and materials.
 				_attachMaterialToObject( "Red", "Plane1" );
 
-				//_addLight( new PointLight( WHITE, Vec3f( 1.f, 10.f, 1.f ), 100.f ) );
+				//_addLight( new PointLight( Vec3f( 1.f, 10.f, 1.f ), WHITE, 100.f ) );
 
 				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f(-2, 0, 0), Vec3f(0, 0, 2), WHITE, 40.f ));
 				
@@ -160,7 +162,7 @@ namespace RT_ISICG
 				aiString mtlName;
 				mtl->Get( AI_MATKEY_NAME, mtlName );
 
-				/*_addMaterial( new ColorMaterial( std::string( mtlName.C_Str() ), kd ) );
+				/* _addMaterial( new ColorMaterial( std::string( mtlName.C_Str() ), kd ) );
 				_attachMaterialToObject( mtlName.C_Str(), meshName );*/
 			}
 

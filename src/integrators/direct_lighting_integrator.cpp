@@ -18,6 +18,7 @@ namespace RT_ISICG
 	Vec3f DirectLightingIntegrator::_directLighting( const Scene & p_scene, const HitRecord & hitRecord) const {
 		
 		Vec3f Li = VEC3F_ZERO;
+		Vec3f LiTemp = VEC3F_ZERO;
 
 		for ( BaseLight * light : p_scene.getLights() ) 
 		{
@@ -25,25 +26,28 @@ namespace RT_ISICG
 				for ( size_t i = 0; i < _nbLightSamples; i++ )
 				{
 					LightSample lSample	  = light->sample( hitRecord._point );
-					Ray			shadowRay = Ray( hitRecord._point, lSample._direction );
+					Ray			shadowRay( hitRecord._point, lSample._direction );
 					shadowRay.offset( hitRecord._normal );
 					if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
 					{
 						float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
-						Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
+						LiTemp += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
+						//Li += hitRecord._object->getMaterial()->shade(shadowRay, hitRecord, lSample) * cosT * lSample._radiance;
 					}
 				}
-				Li /= _nbLightSamples;
+				LiTemp /= _nbLightSamples;
+				Li += LiTemp;
 			}
 			else
 			{
 				LightSample lSample	  = light->sample( hitRecord._point );
-				Ray			shadowRay = Ray( hitRecord._point, lSample._direction );
+				Ray			shadowRay( hitRecord._point, lSample._direction );
 				shadowRay.offset( hitRecord._normal );
 				if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
 				{
 					float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
 					Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
+					//Li += hitRecord._object->getMaterial()->shade( shadowRay, hitRecord, lSample ) * cosT * lSample._radiance;
 				}	
 			}
 				 

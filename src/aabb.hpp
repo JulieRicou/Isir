@@ -22,7 +22,14 @@ namespace RT_ISICG
 		inline void extend( const Vec3f & p_point )
 		{
 			/// TODO
+			_min.x = std::min( _min.x, p_point.x );
+			_min.y = std::min( _min.y, p_point.y );
+			_min.z = std::min( _min.z, p_point.z );
+			_max.x = std::max( _max.x, p_point.x );
+			_max.y = std::max( _max.y, p_point.y );
+			_max.z = std::max( _max.z, p_point.z );
 		}
+
 		// Extends the AABB with another AABB
 		inline void extend( const AABB & p_aabb )
 		{

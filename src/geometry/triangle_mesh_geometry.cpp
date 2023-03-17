@@ -13,38 +13,44 @@ namespace RT_ISICG
 												  _refMesh->_vertices[ p_v2 ] - _refMesh->_vertices[ p_v0 ] ) );
 	}
 
-	bool TriangleMeshGeometry::intersect( const Ray & p_ray, float & p_t ) const
+	bool TriangleMeshGeometry::intersect( const Ray & p_ray, float & p_t) const
 	{
 		const Vec3f & o	 = p_ray.getOrigin();
-		const Vec3f & d	 = p_ray.getDirection();
+		const Vec3f & dir = p_ray.getDirection();
 		const Vec3f & v0 = _refMesh->_vertices[ _v0 ];
 		const Vec3f & v1 = _refMesh->_vertices[ _v1 ];
 		const Vec3f & v2 = _refMesh->_vertices[ _v2 ];
 
 		/// TODO
 		const float EPSILON = 0.0000001;
-		Vec3f		edge1, edge2, h, s, q;
-		float		a, f, u, v;
+		Vec3f		edge1, edge2, pvec, tvec, qvec;
+		float		u, v, det, invDet;
 		edge1 = v1 - v0;
 		edge2 = v2 - v0;
-		h	  = cross( d, edge2 );
-		a	  = dot(edge1, h );
-		if ( a > -EPSILON && a < EPSILON ) return false; // This ray is parallel to this triangle.
-		f = 1.0 / a;
-		s = o - v0;
-		u = f * dot(s, h );
-		if ( u < 0.0 || u > 1.0 ) return false;
-		q = cross(s, edge1 );
-		v = f * dot(d, q );
-		if ( v < 0.0 || u + v > 1.0 ) return false;
+		pvec  = cross( dir, edge2 );
+		det	  = dot( edge1, pvec );
+
+		if ( det > -EPSILON && det < EPSILON ) return false; // This ray is parallel to this triangle.
+
+		invDet = 1.0 / det;
+
+		tvec = o - v0;
+
+		u = dot( tvec, pvec ) * invDet;
+		if ( u < 0.0 || u > 1.0f ) return false;
+
+		qvec = cross( tvec, edge1 );
+
+		v = dot( dir, qvec ) * invDet;
+		if ( v < 0.0 || u + v > 1.0f ) return false;
+
+
 		// At this stage we can compute t to find out where the intersection point is on the line.
-		p_t = f * dot( edge2, q );
-		if ( p_t > EPSILON ) // ray intersection
-		{
-			return true;
-		}
-		else // This means that there is a line intersection but not a ray intersection.
-		return false;
+		p_t = dot( edge2, qvec ) * invDet;
+
+		_faceNormal = ( 1 - u - v ) * _refMesh->_normals[ _v0 ] + u * _refMesh->_normals[ _v1 ]  + v * _refMesh->_normals[ _v2 ];
+
+		return true;
 	}
 
 } // namespace RT_ISICG

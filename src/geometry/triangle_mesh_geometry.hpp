@@ -33,7 +33,7 @@ namespace RT_ISICG
 			unsigned int _v[ 3 ] = { 0, 0, 0 };
 		};
 
-		Vec3f _faceNormal;
+		mutable Vec3f _faceNormal;
 	};
 } // namespace RT_ISICG
 
