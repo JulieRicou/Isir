@@ -1,5 +1,9 @@
 #include "scene.hpp"
 #include "materials/color_material.hpp"
+#include "materials/lambert_material.hpp"
+#include "materials/matte_material.hpp"
+#include "materials/plastic_material.hpp"
+#include "materials/metallic_material.hpp"
 #include "objects/sphere.hpp"
 #include "objects/plane.hpp"
 #include "objects/triangle_mesh.hpp"
@@ -27,13 +31,84 @@ namespace RT_ISICG
 		}
 	}
 
-	void Scene::init()
+	void Scene::init( int tpToInit, int sceneToInit )
 	{
-		int sceneToInit = 3;
 
-		switch ( sceneToInit )
+		switch ( tpToInit )
 		{
-			case 3: 
+		//****TP1****
+		case 1:
+			// Add objects.
+			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Blue", BLUE ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Blue", "Sphere1" );
+			break;
+
+		//****TP2****
+		case 2:
+			// Add objects.
+			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Red", RED ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Red", "Plane1" );
+
+			//Add light
+			_addLight( new PointLight( Vec3f( 1.f, 10.f, 1.f ), WHITE, 100.f ) );
+	
+			// Add objects.
+			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Blue", BLUE ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Blue", "Sphere1" );
+			break;
+
+			
+		//****TP3****
+		case 3:
+			// Add objects.
+			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Red", RED ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Red", "Plane1" );
+
+			// Add light
+			switch ( sceneToInit )
+			{
+			case 1:
+				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 40.f ) );
+				break;
+			case 2: 
+				//TO DO Optionnel TP3
+			default:
+				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 40.f ) );
+				break;
+			}
+
+			// Add objects.
+			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Blue", BLUE ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Blue", "Sphere1" );
+			break;
+
+		//****TP4****
+		case 4:
 			// ================================================================
 			// Add materials .
 			// ================================================================
@@ -44,14 +119,36 @@ namespace RT_ISICG
 			_addMaterial( new ColorMaterial( "MagentaColor", MAGENTA ) );
 			_addMaterial( new ColorMaterial( "YellowColor", YELLOW ) );
 			_addMaterial( new ColorMaterial( "CyanColor", CYAN ) );
+
 			// ================================================================
 			// Add objects .
 			// ================================================================
 			// OBJ.
-			//loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj" );
-			//_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
-			loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj" );
-			_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+			switch ( sceneToInit )
+			{
+			case 1:
+				loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj", false, false );
+				_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
+				break;
+			//Bunny
+			case 2:
+				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", false, false );
+				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+			//Bunny with AABB
+			case 3:
+				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", true, false );
+				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+			//Bunny with BVH
+			case 4:
+				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", false, true );
+				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+
+			default:
+				loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj", false, false );
+				_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
+				break;
+			}
+
 			// Pseudo Cornell box made with infinite planes .
 			_addObject( new Plane( "PlaneGround", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
 			_attachMaterialToObject( "GreyColor", "PlaneGround" );
@@ -65,41 +162,60 @@ namespace RT_ISICG
 			_attachMaterialToObject( "MagentaColor", "PlaneFront" );
 			_addObject( new Plane( "PlaneRear", Vec3f( 0.f, 0.f, -10.f ), Vec3f( 0.f, 0.f, 1.f ) ) );
 			_attachMaterialToObject( "YellowColor", "PlaneRear" );
+
 			// ================================================================
 			// Add lights .
 			// ================================================================
 			_addLight( new PointLight( Vec3f( 0.f, 3.f, -5.f ), WHITE, 100.f ) );
 			break;
 
-			case 2: 			
-				// Add objects.
-				_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
-
-				// Add materials.
-				_addMaterial( new ColorMaterial( "Red", RED ) );
-
-				// Link objects and materials.
-				_attachMaterialToObject( "Red", "Plane1" );
-
-				//_addLight( new PointLight( Vec3f( 1.f, 10.f, 1.f ), WHITE, 100.f ) );
-
-				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f(-2, 0, 0), Vec3f(0, 0, 2), WHITE, 40.f ));
-				
-			case 1:
-			default:
-				// Add objects.
-				_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
-
-				// Add materials.
-				_addMaterial( new ColorMaterial( "Blue", BLUE ) );
-
-				// Link objects and materials.
-				_attachMaterialToObject( "Blue", "Sphere1" );
+		case 5:
+			switch ( sceneToInit )
+			{
+			case 1: 
+				_addMaterial( new LambertMaterial( "SphereMat", GREY ) );
+				_addMaterial( new LambertMaterial( "PlaneMat", RED ) );
 				break;
+
+			case 2:
+				_addMaterial( new MatteMaterial( "SphereMat", GREY, 0.6f ) );
+				_addMaterial( new MatteMaterial( "PlaneMat", RED, 0.6f ) );
+				break;
+
+			case 3: 
+				_addMaterial( new PlasticMaterial( "SphereMat", GREY, GREY, 64 ) );
+				_addMaterial( new PlasticMaterial( "PlaneMat", RED, RED, 64 ) );
+				break;
+
+			case 4:
+				_addMaterial( new MetallicMaterial( "SphereMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 0.5f ) );
+				_addMaterial( new LambertMaterial( "PlaneMat", RED ) );
+				break;
+			}
+
+			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+			 _attachMaterialToObject( "SphereMat", "Sphere1" );
+
+			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+			_attachMaterialToObject( "PlaneMat", "Plane1" );
+
+			_addLight( new PointLight( Vec3f( 0.f, 0.f, -2.f ), WHITE, 60 ) );
+			break;
+
+		default:
+			// Add objects.
+			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+
+			// Add materials.
+			_addMaterial( new ColorMaterial( "Blue", BLUE ) );
+
+			// Link objects and materials.
+			_attachMaterialToObject( "Blue", "Sphere1" );
+			break;
 		}
 	}
 
-	void Scene::loadFileTriangleMesh( const std::string & p_name, const std::string & p_path )
+	void Scene::loadFileTriangleMesh( const std::string & p_name, const std::string & p_path, bool useAABB, bool useBVH )
 	{
 		std::cout << "Loading: " << p_path << std::endl;
 		Assimp::Importer importer;
@@ -126,7 +242,7 @@ namespace RT_ISICG
 
 			const bool hasUV = mesh->HasTextureCoords( 0 );
 
-			MeshTriangle * triMesh = new MeshTriangle( meshName );
+			MeshTriangle * triMesh = new MeshTriangle( meshName, useAABB, useBVH );
 			// Vertices before faces otherwise face normals cannot be computed.
 			for ( unsigned int v = 0; v < mesh->mNumVertices; ++v )
 			{
@@ -140,6 +256,10 @@ namespace RT_ISICG
 				triMesh->addTriangle( face.mIndices[ 0 ], face.mIndices[ 1 ], face.mIndices[ 2 ] );
 			}
 
+			if ( useBVH )
+			{
+				triMesh->buildBVH(); 
+			}
 			_addObject( triMesh );
 
 			const aiMaterial * const mtl = scene->mMaterials[ mesh->mMaterialIndex ];

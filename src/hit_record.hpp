@@ -22,7 +22,7 @@ namespace RT_ISICG
 
 		Vec3f			   _point	 = VEC3F_ZERO;
 		Vec3f			   _normal	 = VEC3F_ZERO;
-		float			   _distance = 0.f;
+		float			   _distance = FLT_MAX;
 		const BaseObject * _object	 = nullptr;
 	};
 } // namespace RT_ISICG

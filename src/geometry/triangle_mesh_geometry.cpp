@@ -53,4 +53,11 @@ namespace RT_ISICG
 		return true;
 	}
 
+	void TriangleMeshGeometry::getVertices(Vec3f & v0, Vec3f & v1, Vec3f & v2) const
+	{ 
+		v0 = _refMesh->_vertices[ _v0 ];
+		v1 = _refMesh->_vertices[ _v1 ];
+		v2 = _refMesh->_vertices[ _v2 ];
+	}
+
 } // namespace RT_ISICG

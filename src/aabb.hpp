@@ -34,6 +34,13 @@ namespace RT_ISICG
 		inline void extend( const AABB & p_aabb )
 		{
 			/// TODO
+			_min.x = std::min( _min.x, p_aabb.getMin().x );
+			_min.y = std::min( _min.y, p_aabb.getMin().y );
+			_min.z = std::min( _min.z, p_aabb.getMin().z );
+			_max.x = std::max( _max.x, p_aabb.getMax().x );
+			_max.y = std::max( _max.y, p_aabb.getMax().y );
+			_max.z = std::max( _max.z, p_aabb.getMax().z );
+
 		}
 
 		// Returns the AABB diagonal vector.

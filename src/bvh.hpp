@@ -37,7 +37,7 @@ namespace RT_ISICG
 
 		// Search for the nearest intersection with the ray (call _intersectRec).
 		bool intersect( const Ray & p_ray, const float p_tMin, const float p_tMax, HitRecord & p_hitRecord ) const;
-		// Search for the any intersection with the ray (call _intersectRec).
+		// Search for the any intersection with the ray (call _intersectAnyRec).
 		bool intersectAny( const Ray & p_ray, const float p_tMin, const float p_tMax ) const;
 
 	  private:
@@ -57,12 +57,15 @@ namespace RT_ISICG
 							   const float	   p_tMin,
 							   const float	   p_tMax ) const;
 
+		int	 partition( int firstId, int lastId, float mid, int axis );
+		bool isPartition( int id, float mid, int axis );
+
 	  private:
 		std::vector<TriangleMeshGeometry> * _triangles = nullptr;
 		BVHNode *							_root	   = nullptr;
 
 		const unsigned int _maxTrianglesPerLeaf = 8;
-		const unsigned int _maxDepth			= 32;
+		const unsigned int _maxDepth			= 64;
 	};
 
 } // namespace RT_ISICG
