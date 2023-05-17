@@ -12,8 +12,10 @@ namespace RT_ISICG
 
 		inline Vec3f evaluate( Vec3f dI, Vec3f dO, Vec3f n, float sigma = 0.6f ) const	
 		{
-			const float cosThetaI = glm::max( glm::dot( n, dI ), 0.0f );
-			const float cosThetaO = glm::max( glm::dot( n, dO ), 0.0f );
+			const Vec3f normalizedNormal = glm::normalize( n );
+
+			const float cosThetaI = glm::max( glm::dot( normalizedNormal, dI ), 0.0f );
+			const float cosThetaO = glm::max( glm::dot( normalizedNormal, dO ), 0.0f );
 
 			const float thetaI	= glm::acos( cosThetaI );
 			const float thetaO	= glm::acos( cosThetaO );
@@ -21,8 +23,10 @@ namespace RT_ISICG
 			const float phiI   = glm::atan( glm::sqrt( glm::pow( dI.x, 2 ) + glm::pow( dI.y, 2 ) ) / dI.z );
 			const float phiO   = glm::atan( glm::sqrt( glm::pow( dO.x, 2 ) + glm::pow( dO.y, 2 ) ) / dO.z );
 
-			const float a		= 1.f - 0.5f * ( glm::pow( sigma, 2 ) / ( glm::pow( sigma, 2 ) + 0.33f ) );
-			const float b	   = 0.45f * ( glm::pow( sigma, 2 ) / ( glm::pow( sigma, 2 ) + 0.09f ) );
+			const float squaredSigma = glm::pow( sigma, 2 );
+
+			const float a = 1.f - 0.5f * ( squaredSigma / ( squaredSigma + 0.33f ) );
+			const float b = 0.45f * ( squaredSigma / ( squaredSigma + 0.09f ) );
 			
 			const float alpha = glm::max( thetaI, thetaO );
 			const float beta   = glm::min( thetaI, thetaO );

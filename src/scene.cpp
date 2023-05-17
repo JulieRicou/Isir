@@ -4,9 +4,15 @@
 #include "materials/matte_material.hpp"
 #include "materials/plastic_material.hpp"
 #include "materials/metallic_material.hpp"
+#include "materials/mirror_material.hpp"
+#include "materials/transparent_material.hpp"
 #include "objects/sphere.hpp"
 #include "objects/plane.hpp"
 #include "objects/triangle_mesh.hpp"
+#include "objects/implicit_sphere.hpp"
+#include "objects/implicit_cut_hollow_sphere.hpp"
+#include "objects/implicit_link.hpp"
+#include "objects/implicit_rounded_cylinder.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -36,7 +42,7 @@ namespace RT_ISICG
 
 		switch ( tpToInit )
 		{
-		//****TP1****
+		//********TP1********
 		case 1:
 			// Add objects.
 			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
@@ -48,7 +54,8 @@ namespace RT_ISICG
 			_attachMaterialToObject( "Blue", "Sphere1" );
 			break;
 
-		//****TP2****
+
+		//********TP2********
 		case 2:
 			// Add objects.
 			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
@@ -73,7 +80,7 @@ namespace RT_ISICG
 			break;
 
 			
-		//****TP3****
+		//********TP3********
 		case 3:
 			// Add objects.
 			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
@@ -107,7 +114,8 @@ namespace RT_ISICG
 			_attachMaterialToObject( "Blue", "Sphere1" );
 			break;
 
-		//****TP4****
+
+		//********TP4********
 		case 4:
 			// ================================================================
 			// Add materials .
@@ -169,37 +177,235 @@ namespace RT_ISICG
 			_addLight( new PointLight( Vec3f( 0.f, 3.f, -5.f ), WHITE, 100.f ) );
 			break;
 
+
+		//********TP5********
 		case 5:
+			if ( sceneToInit != 7 )
+			{
+				switch ( sceneToInit )
+				{
+				case 1:
+					_addMaterial( new LambertMaterial( "SphereMat", GREY ) );
+					break;
+
+				case 2:
+					_addMaterial( new MatteMaterial( "SphereMat", GREY, 0.6f ) );
+					break;
+
+				case 3:
+					_addMaterial( new PlasticMaterial( "SphereMat", GREY, GREY, 64 ) );
+					break;
+
+				case 4:
+					_addMaterial( new MetallicMaterial(
+						"SphereMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 0.f, 0.3f ) );
+					break;
+
+				case 5:
+					_addMaterial( new MetallicMaterial(
+						"SphereMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 0.5f, 0.3f ) );
+					break;
+
+				case 6:
+					_addMaterial( new MetallicMaterial(
+						"SphereMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 1.f, 0.3f ) );
+					break;
+				}
+
+				_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+				_attachMaterialToObject( "SphereMat", "Sphere1" );
+				_addLight( new PointLight( Vec3f( 0.f, 0.f, -2.f ), WHITE, 60 ) );
+			}
+			else
+			{
+				_addMaterial( new MetallicMaterial( "BunnyMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 0.7f, 0.3f ) );
+
+				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", false, true );
+				_attachMaterialToObject( "BunnyMat", "Bunny_defaultobject" );
+				_addLight( new PointLight( Vec3f( 0.f, 2.f, -6.f ), WHITE, 60 ) );
+			}
+
+			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+			_addMaterial( new LambertMaterial( "PlaneMat", RED ) );
+			_attachMaterialToObject( "PlaneMat", "Plane1" );
+
+			break;
+
+
+		//********TP6********
+		case 6: 
+			// ================================================================
+			// Add materials .
+			// ================================================================
+			_addMaterial( new MatteMaterial( " WhiteMatte ", WHITE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " RedMatte ", RED, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreenMatte ", GREEN, 0.6f ) );
+			_addMaterial( new MatteMaterial( " BlueMatte ", BLUE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreyMatte ", GREY, 0.6f ) );
+			_addMaterial( new MatteMaterial( " MagentaMatte ", MAGENTA, 0.6f ) );
+			_addMaterial( new MirrorMaterial( " Mirror " ) );
+			_addMaterial( new TransparentMaterial( " Transparent " ) );
+
+			// ================================================================
+			// Add objects .
+			// ================================================================
+			_addObject( new Sphere( " Sphere1 ", Vec3f( -2.f, 0.f, 3.f ), 1.5f ) );
+			_addObject( new Sphere( " Sphere2 ", Vec3f( 2.f, 0.f, 3.f ), 1.5f ) );
+			_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 10.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
+
+			switch ( sceneToInit )
+			{
+			case 3:
+				_attachMaterialToObject( " Mirror ", " Sphere1 " );
+				_attachMaterialToObject( " WhiteMatte ", " Sphere2 " );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " ); 
+				break;
+			case 4:
+				_attachMaterialToObject( " Mirror ", " Sphere1 " );
+				_attachMaterialToObject( " Mirror ", " Sphere2 " );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " );
+				break;
+			case 5:
+				_attachMaterialToObject( " Mirror ", " Sphere1 " );
+				_attachMaterialToObject( " Mirror ", " Sphere2 " );
+				_attachMaterialToObject( " Mirror ", " PlaneFront " );
+				break;
+			case 6:
+				_attachMaterialToObject( " Mirror ", " Sphere1 " );
+				_attachMaterialToObject( " Transparent ", " Sphere2 " );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " );
+				break;
+			default:
+				_attachMaterialToObject( " WhiteMatte ", " Sphere1 " );
+				_attachMaterialToObject( " WhiteMatte ", " Sphere2 " );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " ); 
+			break;
+			}
+
+			// Pseudo Cornell box made with infinite planes .
+			_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+			_attachMaterialToObject( " GreyMatte ", " PlaneGround " );
+			_addObject( new Plane( " PlaneLeft ", Vec3f( 5.f, 0.f, 0.f ), Vec3f( -1.f, 0.f, 0.f ) ) );
+			_attachMaterialToObject( " RedMatte ", " PlaneLeft " );
+			_addObject( new Plane( " PlaneCeiling ", Vec3f( 0.f, 7.f, 0.f ), Vec3f( 0.f, -1.f, 0.f ) ) );
+			_attachMaterialToObject( " GreenMatte ", " PlaneCeiling " );
+			_addObject( new Plane( " PlaneRight ", Vec3f( -5.f, 0.f, 0.f ), Vec3f( 1.f, 0.f, 0.f ) ) );
+			_attachMaterialToObject( " BlueMatte ", " PlaneRight " );
+
+			// ================================================================
+			// Add lights .
+			// ================================================================
+
 			switch ( sceneToInit )
 			{
 			case 1: 
-				_addMaterial( new LambertMaterial( "SphereMat", GREY ) );
-				_addMaterial( new LambertMaterial( "PlaneMat", RED ) );
+				_addLight( new PointLight( Vec3f( 0.f, 5.f, 0.f ), WHITE, 100.f ) ); 
 				break;
-
 			case 2:
-				_addMaterial( new MatteMaterial( "SphereMat", GREY, 0.6f ) );
-				_addMaterial( new MatteMaterial( "PlaneMat", RED, 0.6f ) );
+				_addLight( new QuadLight( Vec3f( 1.f, 5.f, -2.f ), Vec3f( -2.f, 0.f, 0.f ), Vec3f( 0.f, 1.f, 2.f ), WHITE, 40.f ) );
 				break;
-
-			case 3: 
-				_addMaterial( new PlasticMaterial( "SphereMat", GREY, GREY, 64 ) );
-				_addMaterial( new PlasticMaterial( "PlaneMat", RED, RED, 64 ) );
-				break;
-
-			case 4:
-				_addMaterial( new MetallicMaterial( "SphereMat", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 0.5f ) );
-				_addMaterial( new LambertMaterial( "PlaneMat", RED ) );
+			default: 
+				_addLight( new PointLight( Vec3f( 0.f, 5.f, 0.f ), WHITE, 100.f ) ); 
 				break;
 			}
 
-			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
-			 _attachMaterialToObject( "SphereMat", "Sphere1" );
+			break;
 
-			_addObject( new Plane( "Plane1", Vec3f( 0.f, -2.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
-			_attachMaterialToObject( "PlaneMat", "Plane1" );
+			
+		//********TP7********
+		case 7:
+			_addMaterial( new MatteMaterial( " WhiteMatte ", WHITE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " RedMatte ", RED, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreenMatte ", GREEN, 0.6f ) );
+			_addMaterial( new MatteMaterial( " BlueMatte ", BLUE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreyMatte ", GREY, 0.6f ) );
+			_addMaterial( new MatteMaterial( " MagentaMatte ", MAGENTA, 0.6f ) );
+			_addMaterial( new MirrorMaterial( " Mirror " ) );
+			_addMaterial( new TransparentMaterial( " Transparent " ) );
 
-			_addLight( new PointLight( Vec3f( 0.f, 0.f, -2.f ), WHITE, 60 ) );
+			// Pseudo Cornell box made with infinite planes .
+			_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+			_attachMaterialToObject( " GreyMatte ", " PlaneGround " );
+			_addObject( new Plane( " PlaneLeft ", Vec3f( 5.f, 0.f, 0.f ), Vec3f( -1.f, 0.f, 0.f ) ) );
+			_attachMaterialToObject( " RedMatte ", " PlaneLeft " );
+			_addObject( new Plane( " PlaneCeiling ", Vec3f( 0.f, 7.f, 0.f ), Vec3f( 0.f, -1.f, 0.f ) ) );
+			_attachMaterialToObject( " GreenMatte ", " PlaneCeiling " );
+			_addObject( new Plane( " PlaneRight ", Vec3f( -5.f, 0.f, 0.f ), Vec3f( 1.f, 0.f, 0.f ) ) );
+			_attachMaterialToObject( " BlueMatte ", " PlaneRight " );
+			_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 10.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
+			_attachMaterialToObject( " Mirror ", " PlaneFront " ); 
+			
+			switch ( sceneToInit )
+			{
+			case 1: 
+				_addObject( new ImplicitSphere( " Implicit ", false, Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
+				break;
+
+			case 2: 
+				_addObject(
+					new ImplicitCutHollowSphere( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.5f, 0.6f, 0.03f ) ); 
+				break;
+
+			case 3:
+				_addObject( new ImplicitLink( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.15f, 1.f ) );
+				break;
+
+			case 4:
+				_addObject(
+					new ImplicitRoundedCylinder( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.6f, 0.5f ) );
+				break;
+			default: 
+				break;
+			}
+			_attachMaterialToObject( " MagentaMatte ", " Implicit " );
+
+			_addLight( new PointLight( Vec3f( 0.f, 5.f, 0.f ), WHITE, 100.f ) ); 
+			
+			break;
+
+		//********Projet********
+		case 8:
+			_addMaterial( new MatteMaterial( " WhiteMatte ", WHITE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " RedMatte ", RED, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreenMatte ", GREEN, 0.6f ) );
+			_addMaterial( new MatteMaterial( " BlueMatte ", BLUE, 0.6f ) );
+			_addMaterial( new MatteMaterial( " GreyMatte ", GREY, 0.6f ) );
+			_addMaterial( new MatteMaterial( " MagentaMatte ", MAGENTA, 0.6f ) );
+			_addMaterial( new MirrorMaterial( " Mirror " ) );
+			_addMaterial( new TransparentMaterial( " Transparent " ) );
+
+			switch ( sceneToInit )
+			{
+			case 1:
+				_addObject( new Sphere( " Sphere1 ", Vec3f( -2.f, 0.f, 8.f ), 1.5f ) );
+				_addObject( new Sphere( " Sphere2 ", Vec3f( 2.f, 0.f, 3.f ), 1.5f ) );
+				_addObject( new Sphere( " Sphere3 ", Vec3f( 0.f, 1.f, 16.f ), 1.5f ) );
+				_attachMaterialToObject( " RedMatte ", " Sphere1 " );
+				_attachMaterialToObject( " MagentaMatte ", " Sphere2 " );
+				_attachMaterialToObject( " BlueMatte ", " Sphere3 " );
+
+			case 2:
+				_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+				_attachMaterialToObject( " GreyMatte ", " PlaneGround " );
+				_addObject( new Plane( " PlaneLeft ", Vec3f( 5.f, 0.f, 0.f ), Vec3f( -1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " RedMatte ", " PlaneLeft " );
+				_addObject( new Plane( " PlaneCeiling ", Vec3f( 0.f, 7.f, 0.f ), Vec3f( 0.f, -1.f, 0.f ) ) );
+				_attachMaterialToObject( " GreenMatte ", " PlaneCeiling " );
+				_addObject( new Plane( " PlaneRight ", Vec3f( -5.f, 0.f, 0.f ), Vec3f( 1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " BlueMatte ", " PlaneRight " );
+				_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 10.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " );
+				//_addObject( new Sphere( " Sphere2 ", Vec3f( 2.f, 0.f, 3.f ), 1.5f ) );
+				//_addObject( new ImplicitSphere( " Implicit ", true, Vec3f( -2.f, 0.f, 3.f ), 1.5f ) );
+				_addObject( new ImplicitLink( " Implicit2 ", false, Vec3f( -2.f, 0.f, 3.f ), 1.f, 0.4f, 1.f ) );
+				_addObject( new ImplicitCutHollowSphere( " Implicit ", false, Vec3f( 2.f, 0.f, 3.f ), 1.5f, 0.6f, 0.03f ) ); 
+				_attachMaterialToObject( " Transparent ", " Implicit " );
+				_attachMaterialToObject( " Transparent ", " Implicit2 " );
+				_attachMaterialToObject( " Transparent ", " Sphere2 " );
+			}
+
+			_addLight( new PointLight( Vec3f( 0.f, 5.f, 5.f ), WHITE, 100.f ) );
+
 			break;
 
 		default:

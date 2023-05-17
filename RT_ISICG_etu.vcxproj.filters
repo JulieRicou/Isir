@@ -119,6 +119,21 @@
     <ClCompile Include="src\lights\quad_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\integrators\whitted_integrator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects\implicit_sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects\implicit_cut_hollow_sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects\implicit_link.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects\implicit_rounded_cylinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\defines.hpp">
@@ -230,6 +245,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\materials\plastic_material.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\integrators\whitted_integrator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\mirror_material.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\implicit_sphere.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\implicit_cut_hollow_sphere.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\implicit_link.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects\implicit_rounded_cylinder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
