@@ -26,6 +26,7 @@ namespace RT_ISICG
 			tymin = ( _max.y - p_ray.getOrigin().y ) / p_ray.getDirection().y;
 			tymax = ( _min.y - p_ray.getOrigin().y ) / p_ray.getDirection().y;
 		}
+
 		if ( ( tmin > tymax ) || ( tymin > tmax ) ) return false;
 		if ( tymin > tmin ) tmin = tymin;
 		if ( tymax < tmax ) tmax = tymax;

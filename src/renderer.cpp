@@ -92,7 +92,6 @@ namespace RT_ISICG
 		chrono.start();	
 		std::vector<std::vector<Vec3f>> pixelValue;
 
-		#pragma omp parallel for
 		for ( int j = 0; j < width; j++ )
 		{
 			std::vector<Vec3f> row;

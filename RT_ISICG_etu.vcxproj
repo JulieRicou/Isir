@@ -153,6 +153,7 @@ xcopy /y /d  "$(ProjectDir)lib\zlib1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\objects\implicit_mandelbulb.cpp" />
     <ClCompile Include="src\objects\implicit_link.cpp" />
     <ClCompile Include="src\objects\implicit_rounded_cylinder.cpp" />
     <ClCompile Include="src\objects\implicit_cut_hollow_sphere.cpp" />
@@ -179,6 +180,7 @@ xcopy /y /d  "$(ProjectDir)lib\zlib1.dll" "$(OutDir)"</Command>
     <ClCompile Include="src\integrators\whitted_integrator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\objects\implicit_mandelbulb.hpp" />
     <ClInclude Include="src\objects\implicit_link.hpp" />
     <ClInclude Include="src\objects\implicit_rounded_cylinder.hpp" />
     <ClInclude Include="src\objects\implicit_cut_hollow_sphere.hpp" />

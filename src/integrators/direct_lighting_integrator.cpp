@@ -31,7 +31,6 @@ namespace RT_ISICG
 					if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
 					{
 						float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
-						//LiTemp += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
 						LiTemp += hitRecord._object->getMaterial()->shade(shadowRay, hitRecord, lSample) * cosT * lSample._radiance;
 					}
 				}
@@ -46,7 +45,6 @@ namespace RT_ISICG
 				if ( !p_scene.intersectAny( shadowRay, 0.f, lSample._distance ) )
 				{
 					float cosT = glm::max( dot( lSample._direction, hitRecord._normal ), 0.f );
-					//Li += hitRecord._object->getMaterial()->getFlatColor() * cosT * lSample._radiance;
 					Li += hitRecord._object->getMaterial()->shade( shadowRay, hitRecord, lSample ) * cosT * lSample._radiance;
 				}	
 			}

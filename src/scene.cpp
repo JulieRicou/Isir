@@ -13,6 +13,7 @@
 #include "objects/implicit_cut_hollow_sphere.hpp"
 #include "objects/implicit_link.hpp"
 #include "objects/implicit_rounded_cylinder.hpp"
+#include "objects/implicit_mandelbulb.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -92,17 +93,7 @@ namespace RT_ISICG
 			_attachMaterialToObject( "Red", "Plane1" );
 
 			// Add light
-			switch ( sceneToInit )
-			{
-			case 1:
-				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 40.f ) );
-				break;
-			case 2: 
-				//TO DO Optionnel TP3
-			default:
-				_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 40.f ) );
-				break;
-			}
+			_addLight( new QuadLight( Vec3f( 1.f, 10.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 40.f ) );
 
 			// Add objects.
 			_addObject( new Sphere( "Sphere1", Vec3f( 0.f, 0.f, 3.f ), 1.f ) );
@@ -134,6 +125,7 @@ namespace RT_ISICG
 			// OBJ.
 			switch ( sceneToInit )
 			{
+			//UVSphere
 			case 1:
 				loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj", false, false );
 				_attachMaterialToObject( "CyanColor", "UVsphere_defaultobject" );
@@ -142,14 +134,17 @@ namespace RT_ISICG
 			case 2:
 				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", false, false );
 				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+				break;
 			//Bunny with AABB
 			case 3:
 				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", true, false );
 				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+				break;
 			//Bunny with BVH
 			case 4:
 				loadFileTriangleMesh( "Bunny", "data/models/Bunny.obj", false, true );
 				_attachMaterialToObject( "CyanColor", "Bunny_defaultobject" );
+				break;
 
 			default:
 				loadFileTriangleMesh( "UVsphere", "data/models/uvsphere.obj", false, false );
@@ -342,17 +337,24 @@ namespace RT_ISICG
 				break;
 
 			case 2: 
-				_addObject(
-					new ImplicitCutHollowSphere( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.5f, 0.6f, 0.03f ) ); 
+				_addObject( new ImplicitCutHollowSphere( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.5f, 0.6f, 0.03f ) ); 
 				break;
 
 			case 3:
-				_addObject( new ImplicitLink( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.15f, 1.f ) );
+				_addObject( new ImplicitRoundedCylinder( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.6f, 0.5f ) );
 				break;
 
 			case 4:
-				_addObject(
-					new ImplicitRoundedCylinder( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.6f, 0.5f ) );
+				_addObject( new ImplicitLink( " Implicit ", false, Vec3f( 0.f, 0.f, 4.f ), 1.f, 0.15f, 1.f ) );
+				break;
+
+			case 5:
+				_addObject( new ImplicitLink( " ImplicitLink ", false, Vec3f( -2.f, 0.f, 2.f ), 0.7f, 0.3f, 0.4f ) );
+				_addObject( new ImplicitRoundedCylinder( " ImplicitCylinder ", false, Vec3f( 0.f, 0.f, 4.f ), 0.7f, 0.6f, 0.5f ) );
+				_addObject( new ImplicitCutHollowSphere( " ImplicitHollow ", false, Vec3f( 2.f, 0.f, 2.f ), 0.9f, 0.3f, 0.1f ) );
+				_attachMaterialToObject( " GreenMatte ", " ImplicitLink " );
+				_attachMaterialToObject( " BlueMatte ", " ImplicitCylinder " );
+				_attachMaterialToObject( " RedMatte ", " ImplicitHollow " );
 				break;
 			default: 
 				break;
@@ -373,6 +375,7 @@ namespace RT_ISICG
 			_addMaterial( new MatteMaterial( " MagentaMatte ", MAGENTA, 0.6f ) );
 			_addMaterial( new MirrorMaterial( " Mirror " ) );
 			_addMaterial( new TransparentMaterial( " Transparent " ) );
+			_addMaterial( new MetallicMaterial( " Gold ", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 1.f, 0.3f ) );
 
 			switch ( sceneToInit )
 			{
@@ -383,6 +386,10 @@ namespace RT_ISICG
 				_attachMaterialToObject( " RedMatte ", " Sphere1 " );
 				_attachMaterialToObject( " MagentaMatte ", " Sphere2 " );
 				_attachMaterialToObject( " BlueMatte ", " Sphere3 " );
+				_addLight( new PointLight( Vec3f( 0.f, 6.f, 15.f ), WHITE, 50.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 6.f, 6.f ), WHITE, 100.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 6.f, 2.f ), WHITE, 100.f ) );
+				break;
 
 			case 2:
 				_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
@@ -395,16 +402,34 @@ namespace RT_ISICG
 				_attachMaterialToObject( " BlueMatte ", " PlaneRight " );
 				_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 10.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
 				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " );
-				//_addObject( new Sphere( " Sphere2 ", Vec3f( 2.f, 0.f, 3.f ), 1.5f ) );
-				//_addObject( new ImplicitSphere( " Implicit ", true, Vec3f( -2.f, 0.f, 3.f ), 1.5f ) );
-				_addObject( new ImplicitLink( " Implicit2 ", false, Vec3f( -2.f, 0.f, 3.f ), 1.f, 0.4f, 1.f ) );
-				_addObject( new ImplicitCutHollowSphere( " Implicit ", false, Vec3f( 2.f, 0.f, 3.f ), 1.5f, 0.6f, 0.03f ) ); 
-				_attachMaterialToObject( " Transparent ", " Implicit " );
-				_attachMaterialToObject( " Transparent ", " Implicit2 " );
-				_attachMaterialToObject( " Transparent ", " Sphere2 " );
-			}
+				_addObject( new ImplicitLink( " ImplicitLink ", true, Vec3f( -2.f, 0.f, 2.f ), 1.f, 0.4f, 1.f ) );
+				_addObject( new ImplicitSphere( " ImplicitSphere ", true, Vec3f( 0.f, 0.f, 2.f ), 1.5f ) );
+				_addObject( new ImplicitCutHollowSphere( " ImplicitCutHollowSphere ", true, Vec3f( 2.f, 0.f, 2.f ), 1.5f, 0.6f, 0.03f ) ); 
+				_attachMaterialToObject( " GreenMatte ", " ImplicitLink " );
+				_attachMaterialToObject( " BlueMatte ", " ImplicitSphere " );
+				_attachMaterialToObject( " RedMatte ", " ImplicitCutHollowSphere " );
+				_addLight( new PointLight( Vec3f( 0.f, 0.f, -5.f ), WHITE, 100.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 3.f, 2.f ), WHITE, 100.f ) );
+				break;
 
-			_addLight( new PointLight( Vec3f( 0.f, 5.f, 5.f ), WHITE, 100.f ) );
+			case 4: 
+			case 3:
+				_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -3.f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+				_attachMaterialToObject( " GreyMatte ", " PlaneGround " );
+				_addObject( new Plane( " PlaneLeft ", Vec3f( 5.f, 0.f, 0.f ), Vec3f( -1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " RedMatte ", " PlaneLeft " );
+				_addObject( new Plane( " PlaneCeiling ", Vec3f( 0.f, 7.f, 0.f ), Vec3f( 0.f, -1.f, 0.f ) ) );
+				_attachMaterialToObject( " GreenMatte ", " PlaneCeiling " );
+				_addObject( new Plane( " PlaneRight ", Vec3f( -5.f, 0.f, 0.f ), Vec3f( 1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " BlueMatte ", " PlaneRight " );
+				_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 10.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
+				_attachMaterialToObject( " MagentaMatte ", " PlaneFront " );
+				_addObject( new ImplicitMandelbulb( " Mandelbulb ", false, Vec3f( 0.f, 0.f, 3.f )) );
+				_attachMaterialToObject( " Gold ", " Mandelbulb " );
+				_addLight( new PointLight( Vec3f( 0.f, 0.f, -6.f ), WHITE, 100.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 3.f, 2.f ), WHITE, 100.f ) );
+				break;
+			}
 
 			break;
 
