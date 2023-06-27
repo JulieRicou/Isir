@@ -52,7 +52,7 @@ namespace RT_ISICG
 	float ImplicitSurface::_displace( const Vec3f & p_point ) const
 	{
 		float d1 = _sdf( p_point, false );
-		float d2 = sin( 10.0f * p_point.x ) * sin( 10.0f * p_point.y ) * sin( 10.0f * p_point.z );
+		float d2 = sin( 2.0f * p_point.x ) * sin( 2.0f * p_point.y ) * sin( 2.0f * p_point.z );
 		return d1 + d2;
 	}
 } // namespace RT_ISICG

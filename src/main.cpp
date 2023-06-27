@@ -8,14 +8,14 @@ namespace RT_ISICG
 	int main( int argc, char ** argv )
 	{
 		int tpToInit	  = 8;
-		int sceneToInit	  = 4;
-		int pixelsSamples = 32;
+		int sceneToInit	  = 5;
+		int pixelsSamples = 64;
 		int lightSamples  = 32;
 
-		const int imgWidth	= 600;
-		const int imgHeight = 400;
-		//const int imgWidth	= 1920;
-		//const int imgHeight = 1080;
+		//const int imgWidth	= 600;
+		//const int imgHeight = 400;
+		const int imgWidth	= 1920;
+		const int imgHeight = 1080;
 
 		// Create a texture to render the scene.
 		Texture img = Texture( imgWidth, imgHeight );
@@ -31,9 +31,9 @@ namespace RT_ISICG
 		PerspectiveCamera * camera;
 
 		// Depth of field parameters
-		PerspectiveCamera * cameras[ 8 ];
-		const int			nbCams = 8;
-		const float			aperture = 0.1;
+		PerspectiveCamera * cameras[ 64 ];
+		const int			nbCams = 64;
+		const float			aperture = 0.05;
 		Vec3f			focus	 = Vec3f( 0, 0, 3.f );
 		Vec3f			camPosition	 = Vec3f( 0, 0, -2.f );
 		bool				useDOF		= false;
@@ -177,6 +177,7 @@ namespace RT_ISICG
 				camPosition = Vec3f( 0, 0.f, -2.f );
 				focus = Vec3f( 0, 0, 3.f );
 				useDOF		= true;
+				renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING ); 
 				break;
 			case 2: 
 				camera = new PerspectiveCamera( Vec3f( 0, 0.f, -6.f ),
@@ -184,6 +185,7 @@ namespace RT_ISICG
 												Vec3f( 0, 1.f, 0 ),
 												60.f,
 												float( imgWidth ) / imgHeight );
+				renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING ); 
 				break;
 			case 3:
 				camera = new PerspectiveCamera( Vec3f( 0, 0.f, -3.f ),
@@ -191,17 +193,25 @@ namespace RT_ISICG
 												Vec3f( 0, 1.f, 0 ),
 												60.f,
 												float( imgWidth ) / imgHeight );
+				renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING ); 
 				break;
 			case 4:
 				camera		= new PerspectiveCamera( Vec3f( 0.25f, 0.75f, -1.f ),
 												 Vec3f( 0.25f, 0.75f, 1.f ),
 												 Vec3f( 0, 1.f, 0 ),
 												 60.f,
-												 float( imgWidth ) / imgHeight );
+												float( imgWidth ) / imgHeight );
+				renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING ); 
+				break;
+
+			case 5:
+				camPosition = Vec3f( 0, 1.4f, -4.9f );
+				focus		= Vec3f( 0, 1.4f, 0.f );
+				useDOF		= true;
+				renderer.setIntegrator( IntegratorType::WHITTED ); 
 				break;
 			default: break;
 			}
-			renderer.setIntegrator( IntegratorType::DIRECT_LIGHTING ); 
 			renderer.setBackgroundColor( GREY );
 			renderer.setNbPixelSamples( pixelsSamples );
 			renderer.setLightSamples( lightSamples );

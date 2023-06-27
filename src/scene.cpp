@@ -376,6 +376,7 @@ namespace RT_ISICG
 			_addMaterial( new MirrorMaterial( " Mirror " ) );
 			_addMaterial( new TransparentMaterial( " Transparent " ) );
 			_addMaterial( new MetallicMaterial( " Gold ", Vec3f( 1, 0.85, 0.57 ), Vec3f( 1, 0.85, 0.57 ), 1.f, 0.3f ) );
+			_addMaterial( new MetallicMaterial( " Silver ", Vec3f( 0.8, 0.8, 0.8 ), Vec3f( 0.8, 0.8, 0.8 ), 1.f, 0.3f ) );
 
 			switch ( sceneToInit )
 			{
@@ -428,6 +429,29 @@ namespace RT_ISICG
 				_attachMaterialToObject( " Gold ", " Mandelbulb " );
 				_addLight( new PointLight( Vec3f( 0.f, 0.f, -6.f ), WHITE, 100.f ) );
 				_addLight( new PointLight( Vec3f( 0.f, 3.f, 2.f ), WHITE, 100.f ) );
+				break;
+			case 5:
+				_addObject( new Plane( " PlaneGround ", Vec3f( 0.f, -1.5f, 0.f ), Vec3f( 0.f, 1.f, 0.f ) ) );
+				_attachMaterialToObject( " Silver ", " PlaneGround " );
+				_addObject( new Plane( " PlaneLeft ", Vec3f( 2.f, 0.f, 0.f ), Vec3f( -1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " Mirror ", " PlaneLeft " );
+				_addObject( new Plane( " PlaneCeiling ", Vec3f( 0.f, 1.5f, 0.f ), Vec3f( 0.f, -1.f, 0.f ) ) );
+				_attachMaterialToObject( " Mirror ", " PlaneCeiling " );
+				_addObject( new Plane( " PlaneRight ", Vec3f( -2.f, 0.f, 0.f ), Vec3f( 1.f, 0.f, 0.f ) ) );
+				_attachMaterialToObject( " Mirror ", " PlaneRight " );
+				_addObject( new Plane( " PlaneFront ", Vec3f( 0.f, 0.f, 5.f ), Vec3f( 0.f, 0.f, -1.f ) ) );
+				_attachMaterialToObject( " Mirror ", " PlaneFront " );
+				_addObject( new Plane( " PlaneBack ", Vec3f( 0.f, 0.f, -5.f ), Vec3f( 0.f, 0.f, 1.f ) ) );
+				_attachMaterialToObject( " Mirror ", " PlaneBack " );
+				_addObject( new ImplicitMandelbulb( " Mandelbulb ", false, Vec3f( 0.f, 0.f, 3.f ) ) );
+				_attachMaterialToObject( " Gold ", " Mandelbulb " );
+				_addObject( new ImplicitLink( " ImplicitLink ", false, Vec3f( 0.f, -0.5f, 5.f ), 1.9f, 0.3f, 0.2f ) );
+				_attachMaterialToObject( " Silver ", " ImplicitLink " );
+				_addLight( new PointLight( Vec3f( 0.f, 0.f, -2.f ), WHITE, 10.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 0.f, 2.f ), WHITE, 10.f ) );
+				_addLight( new PointLight( Vec3f( 0.f, 1.2f, 0.f ), WHITE, 10.f ) );
+				//_addLight( new QuadLight( Vec3f( 0.f, 0.f, -6.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 100.f ) );
+				//_addLight( new QuadLight( Vec3f( 0.f, 3.f, 2.f ), Vec3f( -2, 0, 0 ), Vec3f( 0, 0, 2 ), WHITE, 100.f ) );
 				break;
 			}
 
